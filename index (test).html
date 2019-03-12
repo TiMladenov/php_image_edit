@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script> -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<style>
+    .message_container {
+        color: red;
+    }
+</style>
+<body id="body">
+    <form id="submitForm" action="first.php" method="POST" enctype="multipart/form-data">
+        <table id="table" border="1">
+            <tr>
+                <td>First name:</td>
+                <td>
+                    <input name="firstname" type="text" onclick="clear()" onblur="checkRequired(this, 'firstname_message')">
+                    <span class="message_container" id="firstname_message">&nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td>
+                    <input name="lastname" type="text" onclick="clear()" onblur="checkRequired(this, 'lastname_message');">
+                    <span class="message_container" id="lastname_message">&nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="Send" onclick="checkInput()">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="file" name="uFile">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <!-- <table id="table" border="1">
+        <tr>
+            <td>First name:</td>
+            <td>
+                <input name="firstname" type="text">
+            </td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td>
+                <input name="lastname" type="text">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="button" value="Send" onclick="checkInput()">Send</button>
+            </td>
+        </tr>
+    </table> -->
+    <script type="text/javascript">
+        function checkInput() {
+            //if I am using a simple table with button to submit
+            // var fn = document.getElementById("fn").value;
+            // var ln = document.getElementById("ln").value;
+
+            //if * am using a form to submit the information
+            var fn = document.forms['submitForm'].elements['firstname'].value;
+            var ln = document.forms['submitForm'].elements['lastname'].value;
+            console.log(fn);
+            console.log(ln);
+            if((fn == "" || fn == null) || (ln == "" || ln == null)) {
+                alert("Please, fill in the required information.");
+            } else {
+                document.getElementById('submitForm').submit();
+                // $.post( "php/first.php", 
+                // { 
+                //     firstname: fn, 
+                //     lastname: ln 
+                // },
+                // function(data,status){
+                //         if(status == "success") {
+                //             //works with the second option without a form
+                //             // var body = document.getElementById('body');
+
+                //             //works with the first option with a form
+                //             var form = document.getElementById('submitForm');
+                //             var table = document.getElementById('table');
+                //             form.removeChild(table);
+                //             var text = document.createTextNode(data);
+                //             form.appendChild(text);
+                //         }
+                //     }   
+                // );
+            }
+        } 
+
+        function checkRequired(field, displayID) {
+            var display = document.getElementById(displayID);
+            if(field.value == null || field.value == "") {
+                display.innerHTML = "Please fill the required information!";
+                // field.focus();
+                return false;
+            } else {
+                display.innerHTML = "";
+                return true;
+            }
+        }
+
+        function clear() {
+            document.forms['submitForm'].elements('firstname').value = "";
+        }
+    </script>
+</body>
+</html>

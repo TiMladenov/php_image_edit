@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="main.js"></script> -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<style>
+    .message_container {
+        color: red;
+    }
+</style>
+<body id="body">
+    <form id="submitForm" action="first.php" method="POST" enctype="multipart/form-data">
+        <table id="table" border="1">
+            <tr>
+                <td>First name:</td>
+                <td>
+                    <input name="firstname" type="text" onblur="checkRequired(this, 'firstname_message')">
+                    <span class="message_container" id="firstname_message">&nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td>
+                    <input name="lastname" type="text" onblur="checkRequired(this, 'lastname_message');">
+                    <span class="message_container" id="lastname_message">&nbsp;</span>
+                </td>
+            </tr>
+            <tr>
+                <td>Select a file:</td>
+                <td>
+                    <input id="uploadFile" name="uFile" type="file">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" name="upload" value="Send" onclick="return checkFile();">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+
+        function checkFile() {
+            var file = document.getElementById("uploadFile").value;
+            var fn = document.forms['submitForm'].elements['firstname'].value;
+            var ln = document.forms['submitForm'].elements['lastname'].value;
+            console.log(file);
+            if(file == null || file == "") {
+                alert("File field is empty.");
+                return false;
+            } else if(ln == "" || ln == null) {
+                alert("Enter your last name.");
+                return false;
+            } else if(fn == "" || fn == null) {
+                alert("Enter your first name.");
+                return false;
+            }
+        }
+
+        function checkRequired(field, displayID) {
+            var display = document.getElementById(displayID);
+            if(field.value == null || field.value == "") {
+                display.innerHTML = "Please fill the required information!";
+                return false;
+            } else {
+                display.innerHTML = "";
+                return true;
+            }
+        }
+    </script>
+</body>
+</html>
