@@ -10,11 +10,17 @@ function imgResize ($type, $src, $dest, $width, $height, $quality) {
     if($type == "png") {
         $tmp_image = imagecreatefrompng($src);
         $new_tmp_image = imagecreatetruecolor($width, $height);
-        //imagettftext($new_tmp_image, 20, 0, 50, 50, imagecolorallocate($new_tmp_image, 255, 0, 0), "arial.ttf" , "This is a test.");
-        imagecopyresampled($new_tmp_image, $tmp_image, 0, 0, 0, 0, $width, $height, imagesx($tmp_image), imagesy($tmp_image));
-        imagepng($new_tmp_image, $dest, 9);
-        // imagedestroy($tmp_image);
-        // imagedestroy($new_tmp_image);
+
+        $color = imagecolorallocate($new_tmp_image, 0, 0, 0);
+        $text = "Test text";
+
+        
+        imagecopyresampled($new_tmp_image, $tmp_image, 0, 0, 0, 0, $width, $height, $width, $height);
+        //imagestring($new_tmp_image, 5, imagesx($new_tmp_image)/2, 15, $text, $color);
+        imagettftext($new_tmp_image, 30, 0, 150, 50, $color, "/home/tmladenov/Desktop/php_simple_project/fonts/open-sans/OpenSans-Light.ttf", $text);
+        imagepng($new_tmp_image, $dest, $quality);
+        imagedestroy($tmp_image);
+        imagedestroy($new_tmp_image);
     } elseif($type == "jpg" || $type == "jpeg") {
         $tmp_image = imagecreatefromjpeg($src);
     }
