@@ -28,7 +28,7 @@
             <tr>
                 <td>Select a file:*</td>
                 <td>
-                    <input id="uploadFile" name="uFile" type="file">
+                    <input id="uploadFile" name="uFile" type="file" accept="image/png image/jpg">
                 </td>
             </tr>
             <tr>
@@ -59,25 +59,37 @@
             </tr>
             <tr>
                 <td>Send:</td>
-                <td>
+                <!-- <td>
                     <input type="submit" name="upload" value="Send" onclick="return checkFile();">
+                </td> -->
+                <td>
+                    <button type="button" onclick="return checkFile();">Submit</button>
                 </td>
             </tr>
             <tr>
                 <td>*</td>
                 <td>Required field.</td>
             </tr>
+            <img src="">
         </table>
     </form>
+    <p>
+        <p>Your image:</p>
+        <br/>
+        <span id="imgResponse"></span>
+    </p>
     <script type="text/javascript">
 
         function checkFile() {
-            var file = document.getElementById("uploadFile").value;
+            var upFile = document.getElementById("uploadFile"); 
             var fn = document.forms['submitForm'].elements['top_text'].value;
             var ln = document.forms['submitForm'].elements['bottom_text'].value;
-
-            if(null == file || "" == file) {
-                alert("File field is empty.");
+            var fs = document.forms['submitForm'].elements['font_size'].value;
+            var ws = document.forms['submitForm'].elements['orientation_x'].value;
+            var hs = document.forms['submitForm'].elements['orientation_y'].value;
+            
+            if("" == upFile || null == upFile) {
+                alert("Select a file.");
                 return false;
             } else if("" == ln || null == ln) {
                 alert("Enter the bottom text.");
@@ -85,7 +97,39 @@
             } else if("" == fn || null == fn) {
                 alert("Enter the top text.");
                 return false;
+            } else if(0 == fs || null == fs) {
+                alert("Enter font size.");
+                return false;
+            } else {
+                ajaxCall(upFile, fn, ln, fs, ws, hs);
             }
+        }
+
+        function ajaxCall(upFile, fn, ln, fs, ws, hs) {
+            var xmlhttp = new XMLHttpRequest();
+            var form = new FormData(document.getElementById("submitForm"));
+            
+            xmlhttp.onreadystatechange=function(){
+                if (xmlhttp.readyState==4 && xmlhttp.status==200){
+                    if(document.getElementById("load_image")) {
+                        var tmp = document.getElementById('load_image');
+                        tmp.setAttribute("src", xmlhttp.responseText);
+                    } else {
+                        var tmp = document.createElement('IMG');
+                        tmp.setAttribute("src", xmlhttp.responseText);
+                        tmp.setAttribute("id", "load_image");
+                        document.getElementById("imgResponse").appendChild(tmp);
+                    }
+                }
+            }
+            xmlhttp.open("POST", "first.php", true);
+            form.append("fn", fn);
+            form.append("ln", ln);
+            form.append('fs', fs);
+            form.append('ws', ws);
+            form.append("hs", hs);
+            form.append("uFile", upFile.files[0]);
+            xmlhttp.send(form);
         }
 
         function checkRequired(field, displayID) {

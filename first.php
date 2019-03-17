@@ -1,5 +1,4 @@
 <?php
-
 function imgResize ($type, $src, $dest, $width, $height, $quality, $userText = null) {
     $tmp_image = "";
 
@@ -52,6 +51,9 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText = n
     } else {
         imagepng($new_tmp_image, $dest, $quality);
     }
+    
+    $returnData = file_get_contents($dest);
+    echo 'data:image/' . $type . ';base64,' . base64_encode($returnData);
 
     imagedestroy($tmp_image);
     imagedestroy($new_tmp_image);
@@ -69,11 +71,11 @@ $new_image_width = "";
 
 $image_file_type = "";
 
-if(isset($_POST['upload']) && ((isset($_POST['top_text']) && $_POST['top_text'] != "") 
-                            && (isset($_POST['bottom_text']) && $_POST['bottom_text'] != ""))) {
+if(((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
 
     $new_file = basename($_FILES['uFile']['name']);
     $new_filename = $uploadDir . $new_file;
+
     $new_filename_size = filesize($uploadDir . $new_file);
 
     $image_file_type = strtolower(pathinfo($new_filename, PATHINFO_EXTENSION));
@@ -88,26 +90,28 @@ if(isset($_POST['upload']) && ((isset($_POST['top_text']) && $_POST['top_text'] 
         $new_filename = $uploadDir . $new_file;
         copy($_FILES['uFile']['tmp_name'], $new_filename);
 
-        if($new_filename_size > 0) {
-            echo "The file has been renamed and successfully saved on this machine!";
-            echo "<br/>";
-            echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
+        if($new_filename_size > 0 && $new_filename_size < 1000000) {
+            // echo "The file has been renamed and successfully saved on this machine!";
+            // echo "<br/>";
+            // echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
         } else {
-            die("There seem to have been an issue with saving the file.");
+            // die("There seem to have been an issue with saving the file or it is over 1MB in size.");
+            die();
         }
     } else {
         copy($_FILES['uFile']['tmp_name'], $new_filename);
         $new_filename_size = filesize($uploadDir . $new_file);
-        if($new_filename_size > 0) {
-            echo "The file has been successfully saved on this machine!";
-            echo "<br/>";
-            echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
+        if($new_filename_size > 0 && $new_filename_size < 1000000) {
+            // echo "The file has been successfully saved on this machine!";
+            // echo "<br/>";
+            // echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
         } else {
-            die("There was an issue with saving the file. It might be too big. File size is " . $new_filename_size / 1000 . " bytes.");
+            // die("There was an issue with saving the file. It might be too big. File size is " . $new_filename_size / 1000 . " bytes.");
+            die();
         }
     }
 
-    $userFormText = $_POST['top_text'] . " " . $_POST['bottom_text'];
+    $userFormText = $_POST['fn'] . " " . $_POST['ln'];
 
     if(isset($_POST['orientation_x']) && isset($_POST['orientation_y'])) {
         $new_image_height = $_POST['orientation_y'];
@@ -121,6 +125,7 @@ if(isset($_POST['upload']) && ((isset($_POST['top_text']) && $_POST['top_text'] 
            (int) $new_image_width, (int) $new_image_height, 9, $userFormText);
 
 } else {
-    die("Please fill in the all the information in the fields.");
+    //die("Please fill in the all the information in the fields.");
+    die();
 }
 ?>
