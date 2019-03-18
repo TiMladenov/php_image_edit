@@ -59,9 +59,6 @@
             </tr>
             <tr>
                 <td>Send:</td>
-                <!-- <td>
-                    <input type="submit" name="upload" value="Send" onclick="return checkFile();">
-                </td> -->
                 <td>
                     <button type="button" onclick="return checkFile();">Submit</button>
                 </td>
@@ -106,7 +103,7 @@
         }
 
         function ajaxCall(upFile, fn, ln, fs, ws, hs) {
-            var xmlhttp = new XMLHttpRequest();
+            var xmlhttp = new createXMLHttpInstance();
             var form = new FormData(document.getElementById("submitForm"));
             
             xmlhttp.onreadystatechange=function(){
@@ -120,7 +117,11 @@
                         tmp.setAttribute("id", "load_image");
                         document.getElementById("imgResponse").appendChild(tmp);
                     }
-                }
+                    document.getElementById("uploadFile").value = "";
+                } 
+                // else {
+                //     document.getElementById("imgResponse").innerHTML = xmlhttp.statusText;
+                // }
             }
             xmlhttp.open("POST", "first.php", true);
             form.append("fn", fn);
@@ -130,6 +131,24 @@
             form.append("hs", hs);
             form.append("uFile", upFile.files[0]);
             xmlhttp.send(form);
+        }
+
+        function createXMLHttpInstance() {
+            var request = null;
+            if (window.XMLHttpRequest) {
+                request = new XMLHttpRequest();
+            } else if (window.ActiveXObject) {
+                try {
+                    request = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        request = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {
+                        alert("XHR not created");
+                    }
+                }
+            }
+            return request;
         }
 
         function checkRequired(field, displayID) {

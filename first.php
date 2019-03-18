@@ -19,25 +19,27 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText = n
     $color = imagecolorallocate($new_tmp_image, 0, 0, 0);
     $background_color = imagecolorallocate($new_tmp_image, 255, 255, 255);
 
+    $uText = "";
     $tmp_text = "";
     $box_img = null;
 
-    list($image_width, $image_height) = getimagesize($src);
-    $image_margin = 5;
+    $image_width = imagesx($tmp_image);
+    $image_height = imagesy($tmp_image);
 
     if(null == $userText) {
-        $userText = "Test Text";
+        $uText = "Test Text";
     } else {
-        $userText = explode(" ", $userText);
-        foreach($userText as $word) {
-            $box_img = imagettfbbox($font_size, 0, $font, $tmp_text . " " . $word);
-            
-            if($box_img[2] > $image_width - $image_margin * 2) {
+        $uText = explode(" ", $userText);
+        if($image_width < $image_height) {
+            foreach($uText as $word) {
                 $tmp_text .= "\n".$word;
-            } else {
+            }
+        } else {
+            foreach($uText as $word) {
                 $tmp_text .= " ".$word;
             }
         }
+        $box_img = imagettfbbox($font_size, 0, $font, $tmp_text . " " . $word);
     }
 
     $tmp_text = trim($tmp_text);
@@ -81,7 +83,11 @@ if(((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POS
     $image_file_type = strtolower(pathinfo($new_filename, PATHINFO_EXTENSION));
 
     if($image_file_type != "png" && $image_file_type != "jpg") {
-        die("You cannot upload this type of image. Only supported formats are png or jpg.");
+        // $output['error'] = "You cannot upload this type of image. Only supported formats are png or jpg.";
+        // header("Error: No file uploaded", true, 500);
+        // echo json_encode($output);
+        header("You cannot upload this type of image. Only supported formats are png or jpg.", true, 500);
+        return 0;
     }
 
     if(file_exists($new_filename)) {
@@ -95,8 +101,8 @@ if(((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POS
             // echo "<br/>";
             // echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
         } else {
-            // die("There seem to have been an issue with saving the file or it is over 1MB in size.");
-            die();
+            echo "There seem to have been an issue with saving the file or it is over 1MB in size.";
+            return 0;
         }
     } else {
         copy($_FILES['uFile']['tmp_name'], $new_filename);
@@ -106,8 +112,8 @@ if(((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POS
             // echo "<br/>";
             // echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
         } else {
-            // die("There was an issue with saving the file. It might be too big. File size is " . $new_filename_size / 1000 . " bytes.");
-            die();
+            echo "There was an issue with saving the file. It might be too big. File size is " . $new_filename_size / 1000 . " bytes.";
+            return 0;
         }
     }
 
@@ -125,7 +131,7 @@ if(((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POS
            (int) $new_image_width, (int) $new_image_height, 9, $userFormText);
 
 } else {
-    //die("Please fill in the all the information in the fields.");
-    die();
+    echo "Please fill in the all the information in the fields.";
+    return 0;
 }
 ?>
