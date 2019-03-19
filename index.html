@@ -79,13 +79,14 @@
 
         function checkFile() {
             var upFile = document.getElementById("uploadFile"); 
+            var upFileValueCheck = document.getElementById("uploadFile").value;
             var fn = document.forms['submitForm'].elements['top_text'].value;
             var ln = document.forms['submitForm'].elements['bottom_text'].value;
             var fs = document.forms['submitForm'].elements['font_size'].value;
             var ws = document.forms['submitForm'].elements['orientation_x'].value;
             var hs = document.forms['submitForm'].elements['orientation_y'].value;
             
-            if("" == upFile || null == upFile) {
+            if("" == upFileValueCheck || null == upFileValueCheck) {
                 alert("Select a file.");
                 return false;
             } else if("" == ln || null == ln) {
@@ -107,21 +108,28 @@
             var form = new FormData(document.getElementById("submitForm"));
             
             xmlhttp.onreadystatechange=function(){
-                if (xmlhttp.readyState==4 && xmlhttp.status==200){
-                    if(document.getElementById("load_image")) {
+                
+                if (this.readyState==4 && this.status==200){
+                    var json = parseJson(this.responseText);
+                    document.getElementById("imgResponse").innerHTML = "";
+
+                    if(!json || json.status === false) {
+                        document.getElementById("imgResponse").innerHTML = json.error;
+                        return;
+                    } else if(json.status === true) {
+                        if(document.getElementById("load_image")) {
                         var tmp = document.getElementById('load_image');
-                        tmp.setAttribute("src", xmlhttp.responseText);
-                    } else {
-                        var tmp = document.createElement('IMG');
-                        tmp.setAttribute("src", xmlhttp.responseText);
-                        tmp.setAttribute("id", "load_image");
-                        document.getElementById("imgResponse").appendChild(tmp);
+                        tmp.setAttribute("src", json.data);
+                        } else {
+                            var tmp = document.createElement('IMG');
+                            tmp.setAttribute("src", json.data);
+                            tmp.setAttribute("id", "load_image");
+                            document.getElementById("imgResponse").appendChild(tmp);
+                        }
+                        //document.getElementById("uploadFile").value = "";
+                        return;
                     }
-                    document.getElementById("uploadFile").value = "";
-                } 
-                // else {
-                //     document.getElementById("imgResponse").innerHTML = xmlhttp.statusText;
-                // }
+                }
             }
             xmlhttp.open("POST", "first.php", true);
             form.append("fn", fn);
@@ -131,6 +139,15 @@
             form.append("hs", hs);
             form.append("uFile", upFile.files[0]);
             xmlhttp.send(form);
+        }
+
+        function parseJson(text) {
+            try {
+                var json = JSON.parse(text);
+            } catch(e) {
+                return false;
+            }
+            return json;
         }
 
         function createXMLHttpInstance() {

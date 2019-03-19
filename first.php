@@ -9,8 +9,8 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText = n
     }
 
     $font = getcwd() . "/fonts/open-sans/OpenSans-Bold.ttf";
-    if(isset($_POST['font_size'])) {
-        $font_size = $_POST['font_size'];
+    if(isset($_POST['fs']) && $_POST['fs'] > 0) {
+        $font_size = $_POST['fs'];
     } else {
         $font_size = 30;
     }
@@ -55,11 +55,10 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText = n
     }
     
     $returnData = file_get_contents($dest);
-    echo 'data:image/' . $type . ';base64,' . base64_encode($returnData);
-
     imagedestroy($tmp_image);
     imagedestroy($new_tmp_image);
     imagedestroy($box_img);
+    return ('data:image/' . $type . ';base64,' . base64_encode($returnData));
 }
 
 /*=================== PROGRAM BEGIN ===================*/
@@ -73,48 +72,65 @@ $new_image_width = "";
 
 $image_file_type = "";
 
-if(((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
+if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
 
     $new_file = basename($_FILES['uFile']['name']);
     $new_filename = $uploadDir . $new_file;
+    $new_filename_size = $_FILES['uFile']['size'];
 
-    $new_filename_size = filesize($uploadDir . $new_file);
+    //TODO: Update php init file to allow file uploads bigger than 1 MB, or else the size for bigger files will always be 0 as they are not uploaded.
+    //TODO: Fix wordwrap to added image text and the dynamic text background size if the added text is longer than the image's width.
 
     $image_file_type = strtolower(pathinfo($new_filename, PATHINFO_EXTENSION));
 
     if($image_file_type != "png" && $image_file_type != "jpg") {
-        // $output['error'] = "You cannot upload this type of image. Only supported formats are png or jpg.";
-        // header("Error: No file uploaded", true, 500);
-        // echo json_encode($output);
-        header("You cannot upload this type of image. Only supported formats are png or jpg.", true, 500);
-        return 0;
+        $msg = "You cannot upload this type of image. Only supported formats are png or jpg.";
+        echo json_encode(
+            array(
+                'status' => false,
+                'error' => $msg,
+                'data' => null,
+                'error_code' => 500
+            )
+        );
+        exit;
     }
 
     if(file_exists($new_filename)) {
 
         $new_file = date("dmy_his") . "_" . basename($_FILES['uFile']['name']);
         $new_filename = $uploadDir . $new_file;
-        copy($_FILES['uFile']['tmp_name'], $new_filename);
 
         if($new_filename_size > 0 && $new_filename_size < 1000000) {
-            // echo "The file has been renamed and successfully saved on this machine!";
-            // echo "<br/>";
-            // echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
+            copy($_FILES['uFile']['tmp_name'], $new_filename);
         } else {
-            echo "There seem to have been an issue with saving the file or it is over 1MB in size.";
-            return 0;
+            $msg = "There seem to have been an issue with saving the file or it is over 1MB in size.";
+            echo json_encode(
+                array(
+                    'status' => false,
+                    'error' => $msg,
+                    'data' => null,
+                    'error_code' => 500
+                )
+            );
+            exit;
         }
     } else {
-        copy($_FILES['uFile']['tmp_name'], $new_filename);
-        $new_filename_size = filesize($uploadDir . $new_file);
         if($new_filename_size > 0 && $new_filename_size < 1000000) {
-            // echo "The file has been successfully saved on this machine!";
-            // echo "<br/>";
-            // echo "Thie file name is " . $new_file . " and file size is " . $new_filename_size / 1000 . "bytes.";
+            copy($_FILES['uFile']['tmp_name'], $new_filename);
         } else {
-            echo "There was an issue with saving the file. It might be too big. File size is " . $new_filename_size / 1000 . " bytes.";
-            return 0;
+            $msg = "There was an issue with saving the file. It might be too big. File size is " . (int) $new_filename_size / 1000 . " Megabytes.";
+            echo json_encode(
+                array(
+                    'status' => false,
+                    'error' => $msg,
+                    'data' => null,
+                    'error_code' => 500
+                )
+            );
+            exit;
         }
+        
     }
 
     $userFormText = $_POST['fn'] . " " . $_POST['ln'];
@@ -127,11 +143,28 @@ if(((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POS
         $new_image_width = 800;
     }
 
-    imgResize($image_file_type, $new_filename, $uploadDir . date("dmy_his") . "_new" . "." . $image_file_type, 
+    $sendData = imgResize($image_file_type, $new_filename, $uploadDir . date("dmy_his") . "_new" . "." . $image_file_type, 
            (int) $new_image_width, (int) $new_image_height, 9, $userFormText);
 
+    echo json_encode(
+    array(
+        'status' => true,
+        'error' => null,
+        'data' => $sendData,
+        'error_code' => null
+        )
+    );
+    exit;
 } else {
-    echo "Please fill in the all the information in the fields.";
-    return 0;
+    $msg = "Please fill in the all the information in the fields.";
+    echo json_encode(
+        array(
+            'status' => false,
+            'error' => $msg,
+            'data' => null,
+            'error_code' => 500
+        )
+    );
+    exit;
 }
 ?>
