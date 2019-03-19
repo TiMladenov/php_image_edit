@@ -9,10 +9,10 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText = n
     }
 
     $font = getcwd() . "/fonts/open-sans/OpenSans-Bold.ttf";
-    if(isset($_POST['fs']) && $_POST['fs'] > 0) {
+    if(isset($_POST['fs']) && ($_POST['fs'] > 0 && $_POST['fs'] <= 25)) {
         $font_size = $_POST['fs'];
     } else {
-        $font_size = 30;
+        $font_size = 15;
     }
 
     $new_tmp_image = imagecreatetruecolor($width, $height);
@@ -69,7 +69,6 @@ $new_filename = "";
 $new_filename_size = "";
 $new_image_height = "";
 $new_image_width = "";
-
 $image_file_type = "";
 
 if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
@@ -133,11 +132,35 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
         
     }
 
-    $userFormText = $_POST['fn'] . " " . $_POST['ln'];
+    $userFormText = filter_var($_POST['fn'], FILTER_SANITIZE_STRING) . " " . filter_var($_POST['ln'], FILTER_SANITIZE_STRING);
 
     if(isset($_POST['orientation_x']) && isset($_POST['orientation_y'])) {
-        $new_image_height = $_POST['orientation_y'];
-        $new_image_width = $_POST['orientation_x'];
+        if(!filter_var($_POST['orientation_x'], FILTER_VALIDATE_INT === false)) {
+            if((($_POST['orientation_x'] > 0 && $_POST['orientation_x'] <= 800) && ($_POST['orientation_y'] > 0 && $_POST['orientation_y'] <= 800))) {
+                $new_image_height = $_POST['orientation_y'];
+                $new_image_width = $_POST['orientation_x'];
+            } else {
+                echo json_encode(
+                    array(
+                        'status' => false,
+                        'error' => "Out of bounds dimension parameters provided",
+                        'data' => null,
+                        'error_code' => 500
+                        )
+                    );
+                exit;
+            }
+        } else {
+            echo json_encode(
+                array(
+                    'status' => false,
+                    'error' => "Invalid dimensions data provided",
+                    'data' => null,
+                    'error_code' => 500
+                    )
+                );
+            exit;
+        }
     } else {
         $new_image_height = 800;
         $new_image_width = 800;
