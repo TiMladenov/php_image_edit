@@ -60,6 +60,8 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText_top
     $returnData = file_get_contents($dest);
     imagedestroy($tmp_image);
     imagedestroy($new_tmp_image);
+    imagedestroy($textImageTop);
+    imagedestroy($textImageBottom);
     return ('data:image/' . $type . ';base64,' . base64_encode($returnData));
 }
 
