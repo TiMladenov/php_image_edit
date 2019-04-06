@@ -62,11 +62,18 @@
                             <td>
                                 <input name="font_size" type="number" min="0" max="25">
                             </td>
+                            <td>
+                                <p>Min 1px, Max 2px font size</p>
+                            </td>
                         </tr>
                         <tr>
                             <td>Send:</td>
                             <td>
                                 <button type="button" onclick="return checkFile();">Submit</button>
+                            </td>
+                            <td>Clear image:</td>
+                            <td>
+                                <button type="button" onclick="return clearImage();">Clear image</button>
                             </td>
                         </tr>
                         <tr>
@@ -187,6 +194,20 @@
             } else {
                 display.innerHTML = "";
                 return true;
+            }
+        }
+
+        function clearImage() {
+            var imageField = document.getElementById("imgResponse");
+            if(imageField.childNodes.length != 0) {
+                var msg = confirm("Image will be cleared.");
+                if(msg == true) {
+                    imageField.innerHTML = "";
+                    return true;
+                }
+            } else {
+                alert("Image field is clear already");
+                return false;
             }
         }
     </script>
