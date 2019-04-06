@@ -65,6 +65,19 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText_top
     return ('data:image/' . $type . ';base64,' . base64_encode($returnData));
 }
 
+function msgReturn ($_status = null, $_error = null, $_data = null, $_error_code = null) {
+
+    $returnArr = json_encode(
+        array(
+            'status' => $_status,
+            'error' => $_error,
+            'data' => $_data,
+            'error_code' => $_error_code
+        )
+    );
+    return $returnArr;
+}
+
 /*=================== PROGRAM BEGIN ===================*/
 
 $uploadDir =  getcwd() . "/uploads/";
@@ -82,20 +95,12 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
     $new_filename_size = $_FILES['uFile']['size'];
 
     //TODO: Update php init file to allow file uploads bigger than 1 MB, or else the size for bigger files will always be 0 as they are not uploaded.
-    //TODO: Fix wordwrap to added image text and the dynamic text background size if the added text is longer than the image's width.
 
     $image_file_type = strtolower(pathinfo($new_filename, PATHINFO_EXTENSION));
 
     if($image_file_type != "png" && $image_file_type != "jpg") {
         $msg = "You cannot upload this type of image. Only supported formats are png or jpg.";
-        echo json_encode(
-            array(
-                'status' => false,
-                'error' => $msg,
-                'data' => null,
-                'error_code' => 500
-            )
-        );
+        echo msgReturn(false, $msg, null, 500);
         exit;
     }
 
@@ -108,29 +113,15 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
             copy($_FILES['uFile']['tmp_name'], $new_filename);
         } else {
             $msg = "There seem to have been an issue with saving the file or it is over 1MB in size.";
-            echo json_encode(
-                array(
-                    'status' => false,
-                    'error' => $msg,
-                    'data' => null,
-                    'error_code' => 500
-                )
-            );
+            echo msgReturn(false, $msg, null, 500);
             exit;
         }
     } else {
         if($new_filename_size > 0 && $new_filename_size < 1000000) {
             copy($_FILES['uFile']['tmp_name'], $new_filename);
         } else {
-            $msg = "There was an issue with saving the file. It might be too big. File size is " . (int) $new_filename_size / 1000 . " Megabytes.";
-            echo json_encode(
-                array(
-                    'status' => false,
-                    'error' => $msg,
-                    'data' => null,
-                    'error_code' => 500
-                )
-            );
+            $msg = "There was an issue with saving the file. It might be too big. File size is " . number_format($new_filename_size / 1000000, 1) . " Megabyte/s.";
+            echo msgReturn(false, $msg, null, 500);
             exit;
         }
         
@@ -145,25 +136,13 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
                 $new_image_height = $_POST['orientation_y'];
                 $new_image_width = $_POST['orientation_x'];
             } else {
-                echo json_encode(
-                    array(
-                        'status' => false,
-                        'error' => "Out of bounds dimension parameters provided",
-                        'data' => null,
-                        'error_code' => 500
-                        )
-                    );
+                $msg = "Out of bounds dimension parameters provided";
+                echo msgReturn(false, $msg, null, 500);
                 exit;
             }
         } else {
-            echo json_encode(
-                array(
-                    'status' => false,
-                    'error' => "Invalid dimensions data provided",
-                    'data' => null,
-                    'error_code' => 500
-                    )
-                );
+            $msg = "Invalid dimenstions data provided";
+            echo msgReturn(false, $msg, null, 500);
             exit;
         }
     } else {
@@ -174,25 +153,11 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
     $sendData = imgResize($image_file_type, $new_filename, $uploadDir . date("dmy_his") . "_new" . "." . $image_file_type, 
            (int) $new_image_width, (int) $new_image_height, 9, $userFormText_top, $userFormText_bottom);
 
-    echo json_encode(
-    array(
-        'status' => true,
-        'error' => null,
-        'data' => $sendData,
-        'error_code' => null
-        )
-    );
+    echo msgReturn(true, null, $sendData, null);
     exit;
 } else {
     $msg = "Please fill in the all the information in the fields.";
-    echo json_encode(
-        array(
-            'status' => false,
-            'error' => $msg,
-            'data' => null,
-            'error_code' => 500
-        )
-    );
+    echo msgReturn(false, $msg, null, 500);
     exit;
 }
 ?>
