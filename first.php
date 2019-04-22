@@ -80,7 +80,7 @@ function msgReturn ($_status = null, $_error = null, $_data = null, $_error_code
 
 /*=================== PROGRAM BEGIN ===================*/
 
-$uploadDir =  getcwd() . "/uploads/";
+$uploadDir =  "/home/webserver/Desktop/uploads/";
 $new_file = "";
 $new_filename = "";
 $new_filename_size = "";
