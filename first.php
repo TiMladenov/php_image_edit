@@ -88,13 +88,14 @@ $new_image_height = "";
 $new_image_width = "";
 $image_file_type = "";
 
+//TODO: Document the code
+//TODO: Update php init file to allow file uploads bigger than 1 MB, or else the size for bigger files will always be 0 as they are not uploaded.
+
 if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
 
     $new_file = basename($_FILES['uFile']['name']);
     $new_filename = $uploadDir . $new_file;
     $new_filename_size = $_FILES['uFile']['size'];
-
-    //TODO: Update php init file to allow file uploads bigger than 1 MB, or else the size for bigger files will always be 0 as they are not uploaded.
 
     $image_file_type = strtolower(pathinfo($new_filename, PATHINFO_EXTENSION));
 
