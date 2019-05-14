@@ -202,11 +202,11 @@ $sendData = "";
  */
 if(($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) && (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))) {
 
-    $secretKey = '6LeVfqMUAAAAAM3a87A6EPTk0MVoE4JzRpV6VPK';
+    $secretKey = '6LeVfqMUAAAAAM3a87A6EPTk0MVoE4JzRpV6VPK-';
     $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$_POST['g-recaptcha-response']);
-    $responseToQuery = json_decode(file_get_contents($verifyResponse));
+    $responseToQuery = json_decode(file_get_contents($verifyResponse), true);
 
-    if($responseToQuery->success) {
+    if($responseToQuery['success'] == true) {
         //Get the name of the uploaded file.
     $new_file = basename($_FILES['uFile']['name']);
     //Append the name of the uploaded file to the name of the upload directory.
