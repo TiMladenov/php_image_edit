@@ -202,7 +202,16 @@ $sendData = "";
  */
 if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
 
-    //Get the name of the uploaded file.
+    $captaQuery = http_build_query(array(
+        'secret' => '6LeVfqMUAAAAAM3a87A6EPTk0MVoE4JzRpV6VPK',
+        'response' => $_POST['g-recaptcha-response'],
+        'remoteip' => $_SERVER['REMOTE_ADDR'],
+    ));
+
+    $responseToQuery = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?' . $captaQuery));
+
+    if($result->success) {
+        //Get the name of the uploaded file.
     $new_file = basename($_FILES['uFile']['name']);
     //Append the name of the uploaded file to the name of the upload directory.
     $new_filename = $uploadDir . $new_file;
@@ -292,6 +301,11 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
     
     echo msgReturn(true, null, $sendData, null);
     exit;
+    } else {
+        $msg = "Fill in the Captcha field.";
+        echo msgReturn(false, $msg, null, 500);
+        exit;
+    }
 
     //If the user has not filled in all the fields in the HTML form.
 } else {
@@ -299,4 +313,3 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
     echo msgReturn(false, $msg, null, 500);
     exit;
 }
-?>
