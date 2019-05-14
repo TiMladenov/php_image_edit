@@ -200,7 +200,7 @@ $sendData = "";
  * If the upload file field isn't empty AND there is a top text AND it isn't empty AND there is a bottom text and it isn't empty,
  * proceed to file upload.
  */
-if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
+if(($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) && (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))) {
 
     $captaQuery = http_build_query(array(
         'secret' => '6LeVfqMUAAAAAM3a87A6EPTk0MVoE4JzRpV6VPK',
