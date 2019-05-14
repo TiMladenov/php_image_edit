@@ -178,10 +178,10 @@ function msgReturn ($_status = null, $_error = null, $_data = null, $_error_code
  */
 
  //Use for deployed version
-// $uploadDir =  "/home/webserver/Desktop/uploads/";
+$uploadDir =  "/home/ubuntu/Desktop/uploads/";
 
 //Use for test version
-$uploadDir =  getcwd() . "//uploads/";
+//$uploadDir =  getcwd() . "//uploads/";
 $new_file = "";
 $new_filename = "";
 $new_filename_size = "";
@@ -202,15 +202,11 @@ $sendData = "";
  */
 if(($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) && (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))) {
 
-    $captaQuery = http_build_query(array(
-        'secret' => '6LeVfqMUAAAAAM3a87A6EPTk0MVoE4JzRpV6VPK',
-        'response' => $_POST['g-recaptcha-response'],
-        'remoteip' => $_SERVER['REMOTE_ADDR'],
-    ));
+    $secretKey = '6LeVfqMUAAAAAM3a87A6EPTk0MVoE4JzRpV6VPK';
+    $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$_POST['g-recaptcha-response']);
+    $responseToQuery = json_decode(file_get_contents($verifyResponse));
 
-    $responseToQuery = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify?' . $captaQuery));
-
-    if($result->success) {
+    if($responseToQuery->success) {
         //Get the name of the uploaded file.
     $new_file = basename($_FILES['uFile']['name']);
     //Append the name of the uploaded file to the name of the upload directory.
