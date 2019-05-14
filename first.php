@@ -178,7 +178,7 @@ function msgReturn ($_status = null, $_error = null, $_data = null, $_error_code
  */
 
  //Use for deployed version
-$uploadDir =  "/home/ubuntu/Desktop/uploads/";
+$uploadDir =  "/home/ubunu/Desktop/uploads/";
 
 //Use for test version
 //$uploadDir =  getcwd() . "//uploads/";
@@ -200,14 +200,9 @@ $sendData = "";
  * If the upload file field isn't empty AND there is a top text AND it isn't empty AND there is a bottom text and it isn't empty,
  * proceed to file upload.
  */
-if(($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) && (isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))) {
+if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "") && (isset($_POST['ln']) && $_POST['ln'] != ""))) {
 
-    $secretKey = '6LeVfqMUAAAAAM3a87A6EPTk0MVoE4JzRpV6VPK-';
-    $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secretKey.'&response='.$_POST['g-recaptcha-response']);
-    $responseToQuery = json_decode(file_get_contents($verifyResponse), true);
-
-    if($responseToQuery['success'] == true) {
-        //Get the name of the uploaded file.
+    //Get the name of the uploaded file.
     $new_file = basename($_FILES['uFile']['name']);
     //Append the name of the uploaded file to the name of the upload directory.
     $new_filename = $uploadDir . $new_file;
@@ -297,11 +292,6 @@ if(($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "
     
     echo msgReturn(true, null, $sendData, null);
     exit;
-    } else {
-        $msg = "Fill in the Captcha field.";
-        echo msgReturn(false, $msg, null, 500);
-        exit;
-    }
 
     //If the user has not filled in all the fields in the HTML form.
 } else {
@@ -309,3 +299,4 @@ if(($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != "
     echo msgReturn(false, $msg, null, 500);
     exit;
 }
+?>
