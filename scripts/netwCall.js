@@ -99,7 +99,7 @@ function ajaxCall(upFile, fn, ln, fs, ws, hs) {
                 tmp.setAttribute("src", json.data);
                 } else {
                     var tmp = document.createElement('IMG');
-                    tmp.setAttribute("class", "w-100 h-100");
+                    tmp.setAttribute("style", "height: 300px; width: 300px");
                     tmp.setAttribute("src", json.data);
                     tmp.setAttribute("id", "load_image");
                     tmp.setAttribute("alt", "This image has been loaded dynamically from the back end");

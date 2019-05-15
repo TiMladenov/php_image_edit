@@ -284,7 +284,7 @@ if($_FILES['uFile']['name'] != "" && ((isset($_POST['fn']) && $_POST['fn'] != ""
     */
     
     $sendData = imgResize($image_file_type, $new_filename, $uploadDir . date("dmy_his") . "_new" . "." . $image_file_type, 
-           (int) $new_image_width, (int) $new_image_height, 9, $userFormText_top, $userFormText_bottom);
+           (int) $new_image_width, (int) $new_image_height, 90, $userFormText_top, $userFormText_bottom);
 
     /** Returns the URI to user's client via AJAX in JSON format.
      * @see msgReturn
