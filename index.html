@@ -13,75 +13,144 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body id="body">
-    <div class="container h-100 d-flex justify-content-center">
-        <div class="jumbotron my-auto align-items-center border border-info">
-                <form id="submitForm" action="first.php" method="POST" enctype="multipart/form-data">
-                    <table id="table" class="table table-triped w-auto">
-                        <tr>
-                            <td>Top text:*</td>
-                            <td>
-                                <input name="top_text" type="text" onblur="checkRequired(this, 'top_text_message')">
-                                <span class="message_container" id="top_text_message">&nbsp;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Bottom text:*</td>
-                            <td>
-                                <input name="bottom_text" type="text" onblur="checkRequired(this, 'bottom_text_message');">
-                                <span class="message_container" id="bottom_text_message">&nbsp;</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Select a file:*</td>
-                            <td>
-                                <input id="uploadFile" name="uFile" type="file" accept="image/png image/jpg">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Select image width:</td>
-                            <td>
-                                <select name="orientation_x">
-                                    <option value="200" selected>200</option>
-                                    <option value="400">400</option>
-                                    <option value="800">800</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Select image height:</td>
-                            <td>
-                                <select name="orientation_y">
-                                    <option value="200" selected>200</option>
-                                    <option value="400">400</option>
-                                    <option value="800">800</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Font size:</td>
-                            <td>
-                                <input name="font_size" type="number" min="0" max="25">
-                            </td>
-                            <td>
-                                <p>Min 1, Max 25 font size</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Send:</td>
-                            <td>
-                                <button type="button" onclick="return checkFile();">Submit</button>
-                            </td>
-                            <td>Clear image:</td>
-                            <td>
-                                <button type="button" onclick="return clearImage();">Clear image</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>*</td>
-                            <td>Required field.</td>
-                        </tr>
-                        <img src="">
-                    </table>
+    <div class="container-fluid justify-content-center align-items-center">
+        <div class="container-fluid">
+                <form class="jumbotron my-auto align-items-center border border-info" id="submitForm" action="first.php" method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Top text:*</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <input name="top_text" type="text" onblur="checkRequired(this, 'top_text_message')">
+                                </div>
+                                <div class="row">
+                                    <span class="message_container" id="top_text_message">&nbsp;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Bottom text:*</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <input name="bottom_text" type="text" onblur="checkRequired(this, 'bottom_text_message')">
+                                </div>
+                                <div class="row">
+                                    <span class="message_container" id="bottom_text_message">&nbsp;</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Select a file:*</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <input id="uploadFile" name="uFile" type="file" accept="image/png image/jpg">
+                                </div>
+                                <!-- <div class="row">
+                                    <span class="message_container" id="bottom_text_message">&nbsp;</span>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Select image width:*</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <select name="orientation_x">
+                                        <option value="200" selected>200</option>
+                                        <option value="400">400</option>
+                                        <option value="800">800</option>
+                                    </select>
+                                </div>
+                                <!-- <div class="row">
+                                    <span class="message_container" id="bottom_text_message">&nbsp;</span>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Select image height:*</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <select name="orientation_y">
+                                        <option value="200" selected>200</option>
+                                        <option value="400">400</option>
+                                        <option value="800">800</option>
+                                    </select>
+                                </div>
+                                <!-- <div class="row">
+                                    <span class="message_container" id="bottom_text_message">&nbsp;</span>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Font size:*</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <input name="font_size" type="number" min="0" max="25">
+                                </div>
+                                <div class="row">
+                                    <span>Min 1, Max 25 font size</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Send:</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <button type="button" onclick="return checkFile();">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <label>Clear image:</label>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="container">
+                                <div class="row">
+                                    <button type="button" onclick="return clearImage();">Clear image</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <img src="">
+                        </div>
+                    </div>
                 </form>
                 <p>
                     <p>Your image:</p>
