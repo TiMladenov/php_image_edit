@@ -7,7 +7,7 @@ This is a simple web app where the user could upload and edit an image.
 <img src="https://img.stackshare.io/service/2538/kEpgHiC9.png" width="25" height="25"> <img src="https://img.stackshare.io/service/6727/css.png" width="25" height="25"> <img src="https://img.stackshare.io/service/1101/C9QJ7V3X.png" width="25" height="25"> <img src="https://img.stackshare.io/service/1209/javascript.jpeg" width="25" height="25">
 
 - **Backend**:
- <img src="https://img.stackshare.io/service/991/php.png" width="25" height="25">
+<img src="https://img.stackshare.io/service/991/php.png" width="25" height="25">
 
 # Application features
 
