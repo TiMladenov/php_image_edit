@@ -3,6 +3,9 @@
 #Author : Tihomir Mladenov
 #Date	: 23-Apr-2019
 
+#For this script to work, the following path must
+#already be on the server: /home/ubuntu/Desktop/
+
 cd && cd Desktop
 if [ ! -d "uploads" ] ; then
 	mkdir uploads

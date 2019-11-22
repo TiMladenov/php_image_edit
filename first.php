@@ -182,7 +182,7 @@ function msgReturn ($_status = null, $_error = null, $_data = null, $_error_code
  */
 
 //Use for deployed version
-$uploadDir =  "/home/ubunu/Desktop/uploads/";
+$uploadDir =  "/home/ubuntu/Desktop/uploads/";
 
 //Use for test version
 //$uploadDir =  getcwd() . "//uploads/";
