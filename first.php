@@ -1,4 +1,7 @@
 <?php
+
+use function PHPSTORM_META\type;
+
 /**
  * This finction is passed the type of the uploaded image, its location on the server, the height and width of the
  * edited image, it's quality (currently hardcoded), top and bottom text, provided by the user. Then it creates
@@ -68,8 +71,9 @@ function imgResize ($type, $src, $dest, $width, $height, $quality, $userText_top
         $tmp_text_top = "Test";
         $tmp_text_bottom = "Text";
     } else {
-        $tmp_text_top = trim(wordwrap($userText_top, $width - 190, "\n", true));
-        $tmp_text_bottom = trim(wordwrap($userText_bottom, $width - 190, "\n", true));
+        $limit = $width * 0.05;
+        $tmp_text_top = trim(wordwrap($userText_top, $width - ($width - $limit), "\n", true));
+        $tmp_text_bottom = trim(wordwrap($userText_bottom, $width - ($width - $limit), "\n", true));
     }
 
     //Creates pixeled boxes around the texts.
@@ -177,7 +181,7 @@ function msgReturn ($_status = null, $_error = null, $_data = null, $_error_code
  * @see msgReturn
  */
 
- //Use for deployed version
+//Use for deployed version
 $uploadDir =  "/home/ubunu/Desktop/uploads/";
 
 //Use for test version

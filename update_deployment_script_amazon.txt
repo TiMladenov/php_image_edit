@@ -1,0 +1,8 @@
+if [ ! -d "$Desktop" ] ; then
+
+sudo apt-get update
+sudo apt-get install apache2
+sudo apt-get install php7.0
+sudo apt-get install libapache2-mod-php7.0
+sudo apt-get install php-7.0gd
+sudo service apache2 restart

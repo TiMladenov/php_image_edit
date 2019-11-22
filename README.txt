@@ -13,4 +13,3 @@
 ==================================================================
 NOTES:
 1. Image upload size is limited to 2MB in php.ini
-2. Create shell script for deployment needs if necessary
